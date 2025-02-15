@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Text Assistant - Công cụ xử lý văn bản</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            color: #fff;
+            border-radius: 4px;
+        }
+
+        button.process-btn {
+            background: #007bff;
+        }
+
+        button.copy-btn {
+            background: #28a745;
+        }
+
+        button.paste-btn {
+            background: #6c757d;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+            word-break: break-all;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fafafa;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button class="paste-btn" onclick="pasteText()">Paste</button>
+        <h2>Nhập chuỗi văn bản tiếng Việt có dấu:</h2>
+        <textarea id="inputText" rows="4">Nhập chuỗi văn bản tiếng Việt có dấu</textarea>
+        <br>
+        <br>
+        <button class="process-btn" onclick="processText()">Xử lý</button>
+        <h3>Kết quả:</h3>
+        <div id="result"></div>
+        <button class="copy-btn" onclick="copyResult()">Copy</button>
+    </div>
+    <div class="container">
+        <h1>Text Assistant - Công cụ xử lý văn bản tiếng Việt</h1>
+        <p>
+            Text Assistant là một ứng dụng web đơn giản nhưng mạnh mẽ, được thiết kế để xử lý và chuyển đổi văn bản
+            tiếng Việt có dấu theo các bước chuẩn hóa. Ứng dụng này đặc biệt hữu ích cho những ai cần tạo "slug" (chuỗi
+            URL thân thiện) hoặc định dạng lại văn bản theo yêu cầu cụ thể.
+        </p>
+
+        <h2>Tính năng chính:</h2>
+        <ul>
+            <li><strong>Chuyển đổi chữ thường:</strong> Tự động chuyển tất cả ký tự trong văn bản thành chữ thường, đảm
+                bảo tính nhất quán cho dữ liệu đầu ra.</li>
+            <li><strong>Loại bỏ dấu tiếng Việt:</strong> Chuyển đổi các ký tự có dấu thành ký tự không dấu, hỗ trợ việc
+                xử lý dữ liệu và tạo slug dễ dàng.</li>
+            <li><strong>Thay thế ký tự phân cách:</strong> Tự động thay thế tất cả khoảng trắng và các ký tự phân cách
+                (như dấu cách, dấu gạch ngang, ...) bằng dấu gạch ngang đơn (-) để tạo ra một chuỗi liền mạch, phù hợp
+                với định dạng URL.</li>
+            <li><strong>Loại bỏ ký tự không cần thiết:</strong> Chỉ giữ lại các ký tự chữ cái và số, loại bỏ những ký tự
+                đặc biệt không cần thiết.</li>
+            <li><strong>Xử lý dấu gạch ngang dư thừa:</strong> Loại bỏ các dấu gạch ngang thừa ở đầu, cuối và giữa các
+                chuỗi ký tự, đảm bảo kết quả luôn sạch sẽ và chuẩn mực.</li>
+            <li><strong>Tính năng "Paste" và "Copy":</strong>
+                <ul>
+                    <li><em>Paste:</em> Cho phép người dùng nhanh chóng dán văn bản từ clipboard vào ô nhập liệu.</li>
+                    <li><em>Copy:</em> Giúp người dùng sao chép kết quả đã xử lý vào clipboard để sử dụng ở nơi khác một
+                        cách dễ dàng.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>Quy trình sử dụng:</h2>
+        <ol>
+            <li><strong>Nhập văn bản:</strong> Người dùng nhập hoặc sử dụng nút "Paste" để dán chuỗi văn bản tiếng Việt
+                có dấu vào ô nhập liệu.</li>
+            <li><strong>Xử lý văn bản:</strong> Nhấn nút "Xử lý" để ứng dụng thực hiện chuyển đổi theo các bước: chuyển
+                chữ thường, loại bỏ dấu, thay thế ký tự, và xử lý gạch ngang.</li>
+            <li><strong>Sao chép kết quả:</strong> Sau khi kết quả được hiển thị, người dùng có thể nhấn nút "Copy" để
+                sao chép kết quả về clipboard, thuận tiện cho việc sử dụng ở nơi khác.</li>
+        </ol>
+
+        <p>
+            Ứng dụng Text Assistant là một phần trong dự án <strong>tools</strong> và được triển khai trên GitHub Pages,
+            cho phép truy cập và sử dụng trực tuyến dễ dàng bởi mọi người.
+        </p>
+    </div>
+    <script>
+        function removeVietnameseTones(str) {
+            // Chuyển đổi các ký tự có dấu thành không dấu
+            str = str.replace(/á|à|ả|ã|ạ|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/g, "a");
+            str = str.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/g, "e");
+            str = str.replace(/í|ì|ỉ|ĩ|ị/g, "i");
+            str = str.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/g, "o");
+            str = str.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/g, "u");
+            str = str.replace(/ý|ỳ|ỷ|ỹ|ỵ/g, "y");
+            str = str.replace(/đ/g, "d");
+
+            // Xử lý các trường hợp chữ hoa nếu có
+            str = str.replace(/Á|À|Ả|Ã|Ạ|Ă|Ắ|Ằ|Ẳ|Ẵ|Ặ|Â|Ấ|Ầ|Ẩ|Ẫ|Ậ/g, "a");
+            str = str.replace(/É|È|Ẻ|Ẽ|Ẹ|Ê|Ế|Ề|Ể|Ễ|Ệ/g, "e");
+            str = str.replace(/Í|Ì|Ỉ|Ĩ|Ị/g, "i");
+            str = str.replace(/Ó|Ò|Ỏ|Õ|Ọ|Ô|Ố|Ồ|Ổ|Ỗ|Ộ|Ơ|Ớ|Ờ|Ở|Ỡ|Ợ/g, "o");
+            str = str.replace(/Ú|Ù|Ủ|Ũ|Ụ|Ư|Ứ|Ừ|Ử|Ữ|Ự/g, "u");
+            str = str.replace(/Ý|Ỳ|Ỷ|Ỹ|Ỵ/g, "y");
+            str = str.replace(/Đ/g, "d");
+
+            return str;
+        }
+
+        function slugify(text) {
+            // Bước 1: Chuyển thành chữ thường
+            text = text.toLowerCase();
+
+            // Bước 2: Loại bỏ dấu tiếng Việt
+            text = removeVietnameseTones(text);
+
+            // Bước 3 & 4: Thay thế tất cả khoảng trắng và ký tự phân cách thành dấu gạch ngang, chỉ giữ lại chữ cái và số
+            text = text.replace(/[^a-z0-9]+/g, '-');
+
+            // Bước 5: Loại bỏ các dấu gạch ngang dư thừa ở đầu và cuối chuỗi
+            text = text.replace(/^-+|-+$/g, '');
+
+            return text;
+        }
+
+        function processText() {
+            const input = document.getElementById('inputText').value;
+            const result = slugify(input);
+            document.getElementById('result').innerText = result;
+        }
+
+        function copyResult() {
+            const resultText = document.getElementById('result').innerText;
+            if (!resultText) {
+                alert("Không có kết quả để copy!");
+                return;
+            }
+            // Sử dụng Clipboard API nếu có
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(resultText).then(() => {
+                    alert("Đã copy kết quả!");
+                }, () => {
+                    alert("Copy thất bại, hãy thử lại!");
+                });
+            } else {
+                // Fallback cho trình duyệt không hỗ trợ Clipboard API
+                const textArea = document.createElement("textarea");
+                textArea.value = resultText;
+                // Tránh cuộn trang
+                textArea.style.position = "fixed";
+                textArea.style.top = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    alert("Đã copy kết quả!");
+                } catch (err) {
+                    alert("Copy thất bại, hãy thử lại!");
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        function pasteText() {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.readText().then(text => {
+                    document.getElementById('inputText').value = text;
+                }).catch(err => {
+                    alert("Không thể đọc clipboard: " + err);
+                });
+            } else {
+                alert("Trình duyệt của bạn không hỗ trợ tính năng này. Vui lòng dán thủ công!");
+            }
+        }
+    </script>
+</body>
+
+</html>
